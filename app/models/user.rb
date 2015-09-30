@@ -17,26 +17,27 @@ class User < ActiveRecord::Base
   attr_accessor   :password
   attr_accessible :name, :email, :password, :password_confirmation
   
-  has_many :microposts,    :dependent => :destroy
-  has_many :relationships, :dependent => :destroy,
+  has_many :microposts,    :dependent   => :destroy
+  has_many :relationships, :dependent   => :destroy,
                            :foreign_key => "follower_id"
-  has_many :reverse_relationships, :dependent => :destroy,
+  has_many :reverse_relationships, :dependent   => :destroy,
                                    :foreign_key => "followed_id",
-                                   :class_name => "Relationship"
-  has_many :following, :through => :relationships, :source => :followed
+                                   :class_name  => "Relationship"
+  has_many :following, :through => :relationships,
+                       :source  => :followed
   has_many :followers, :through => :reverse_relationships,
                        :source  => :follower
   
-  email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   
-  validates :name,  :presence => true,
-                    :length   => { :maximum => 50 }
-  validates :email, :presence   => true,
-                    :format     => { :with => email_regex },
-                    :uniqueness => { :case_sensitive => false }
-  validates :password, :presence => true,
-                       :confirmation => true,
-                       :length => { :within => 6..40 }
+  validates :name,      :presence     => true,
+                        :length       => { :maximum => 50 }
+  validates :email,     :presence     => true,
+                        :format       => { :with => EMAIL_REGEX },
+                        :uniqueness   => { :case_sensitive => false }
+  validates :password,  :presence     => true,
+                        :confirmation => true,
+                        :length       => { :within => 6..40 }
 
   before_save :encrypt_password
   
