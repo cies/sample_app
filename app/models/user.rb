@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   end
   
   def following?(followed)
-    relationships.find_by_followed_id(followed)
+    relationships.find_by_followed_id(followed) != nil
   end
   
   def follow!(followed)
